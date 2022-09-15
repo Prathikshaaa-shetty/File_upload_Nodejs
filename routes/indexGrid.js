@@ -169,6 +169,31 @@ router.get("/signup", function (req, res, next) {
     res.render("signup");
 });
 
+router.post("/login", function (req, res, next) {
+  var username = req.body.username;
+  var password = req.body.password;
 
+  var checkUser = userModel.findOne({ username: username });
+  checkUser.exec((err, data) => {
+    if (err) throw err;
+    var getPassword = data.password;
+    if (password == getPassword) {
+        res.redirect("/home");
+    } else {
+      res.send("Invalid Username or Password");
+    }
+  })
+});
+
+router.post("/signup", function (req, res, next) {
+
+  var userDetails = new userModel({
+  username : req.body.username,
+  password : req.body.password,
+  })
+  userDetails.save(function (err, req1) {
+    res.redirect("/");
+  });
+});
 
 module.exports = router;
